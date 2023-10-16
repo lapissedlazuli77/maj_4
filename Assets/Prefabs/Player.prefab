@@ -180,7 +180,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!114 &-7407259865451744497
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -194,7 +194,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grounded: 0
-  castDist: 0.2
+  castDist: 0.4
   jumpLimit: 2
-  gravityScale: 5
-  gravityFall: 40
+  gravityScale: 2
+  gravityFall: 2
+  speedmodify: 20
