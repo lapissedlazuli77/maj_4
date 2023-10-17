@@ -1,11 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class Jumping : MonoBehaviour
 {
     Rigidbody2D rbody;
     Animator anim;
+
+    int timescore = 0;
+    int killscore = 0;
 
     public bool grounded = false;
     public float castDist = 0.2f;
@@ -18,9 +23,24 @@ public class Jumping : MonoBehaviour
     float horizMove;
     public float speedmodify;
 
+    float currenttime = 0;
+    float targetTime = 1f;
+
+
+    [SerializeField]
+    private TMP_Text runscore;
+    [SerializeField]
+    private TMP_Text enemyscore;
+    [SerializeField]
+    private GameObject restart;
+
+    string display1 = "Total time survived: ";
+    string display2 = "Enemies defeated: ";
+
     // Start is called before the first frame update
     void Start()
     {
+        restart.SetActive(false);
         rbody = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
     }
@@ -32,6 +52,12 @@ public class Jumping : MonoBehaviour
         if (Input.GetKey("space") && grounded)
         {
             jump = true;
+        }
+        currenttime += Time.deltaTime;
+        if (currenttime > targetTime)
+        {
+            currenttime = 0;
+            timescore++;
         }
     }
     void FixedUpdate()
@@ -70,13 +96,36 @@ public class Jumping : MonoBehaviour
             if (transform.position.y >= collision.gameObject.transform.position.y)
             {
                 Destroy(collision.gameObject);
+                killscore++;
                 jump = true;
+            } else if (transform.position.y < collision.gameObject.transform.position.y)
+            {
+                finalscreen();
+                Destroy(gameObject);
             }
         }
+        if (collision.gameObject.tag == "Border")
+        {
+            finalscreen();
+            Destroy(gameObject);
+        }
     }
+
     void HorizontalMove(float toMove)
     {
         float moveX = toMove * speedmodify * Time.fixedDeltaTime;
         rbody.velocity = new Vector3(moveX, rbody.velocity.y);
+    }
+    void finalscreen()
+    {
+        string stringtime = timescore.ToString();
+        string stringkill = killscore.ToString();
+
+        display1 += stringtime;
+        display2 += stringkill;
+
+        restart.SetActive(true);
+        runscore.text = display1;
+        enemyscore.text = display2;
     }
 }
